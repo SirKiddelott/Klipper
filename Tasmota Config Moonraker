@@ -1,0 +1,12 @@
+[power printer]
+type: tasmota
+address: 192.168.178.00
+#IP Adresse deiner Tasmota Steckdose
+initial_state: off 
+restart_klipper_when_powered: True
+off_when_shutdown: True
+on_when_job_queued: True
+restart_delay: 1
+bound_services:
+ klipper
+ klipper-mcu
