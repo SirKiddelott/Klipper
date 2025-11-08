@@ -1,0 +1,12 @@
+Hier mal die so genannte Rule für eine Tasmota. Damit diese funktioniert muß die Tasmotasteckdose kalibriert sein. Zu dem Thema gibt es genug Anleitungen im Netz. Danach hängt Ihr am besten den Drucker an die Steckdose und schaut, was er laut dem Tasmota Webinterface für Verbrauchswerte im Leerlauf hat.
+Die Rule bezieht sich auf die Watt die der Drucker im Leerlauf verbraucht und muß von euch angepasst werden. Der Drucker im Beispiel hat einen Leerlaufverbrauch von 7-8 Watt, auf diesen Wert hab ich einen kleinen Puffer drauf gehauen und 10 Watt eingetragen damit der Drucker auf jeden Fall abgeschaltet wird.
+Die Rule überwacht den Verbrauch also über 10 Watt und macht einfach nichts weiter, sobald der Verbrauch unter 10 Watt sinkt wird ein Timer von 600 Sekunden (10 Minuten) gestartet und der Verbrauch weiterhin überwacht. Bleibt der Wert darunter dann wird die Steckdose nach 10 Minuten ausgeschaltet, 
+geht er kurz über 10 Watt dann wird der Timer resettet und beginnt wieder bei 0 wenn der Wert unter 10 Watt fällt. 10 Minuten reichen im Normalfall zum Abkühlen aus, es kann natürlich jeder die Zeit nach seinen Wünschen anpassen. Diese Rule funktioniert so also eigentlich mit jedem Gerät das angeschlossen wird. 
+Ich empfehle bei Updates vom Drucker am besten wenn möglich irgend einen Verbraucher am Drucker einzuschalten, Heizbett, Düse oder sonst was da man dann keine Gefahr hat, das die Steckdose während dem Update den Drucker ausschaltet und den Drucker dadurch eventuell zerstört.
+
+Rule1
+  ON system#boot DO var1 0 ENDON
+  ON ENERGY#Power==0 DO if (var1!=0) RuleTimer1 0; var1 0 endif BREAK
+  ON ENERGY#Power>=10 DO if (var1!=0) RuleTimer1 0; var1 0 endif BREAK
+  ON ENERGY#Power<10 DO if (var1!=1) RuleTimer1 600; var1 1 endif ENDON
+  ON Rules#Timer=1 DO Power1 off ENDON
